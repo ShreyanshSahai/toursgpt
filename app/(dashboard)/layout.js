@@ -9,12 +9,12 @@ export const metadata = {
 
 const layout = ({ children }) => {
     return (
-        <div className="drawer lg:drawer-open">
+        <div className="drawer 2xl:drawer-open">
             <input type="checkbox" id="my-drawer-2" className="drawer-toggle" />
             <div className="drawer-content">
                 <label
                     htmlFor="my-drawer-2"
-                    className="drawer-button lg:hidden fixed top-6 right-6"
+                    className="drawer-button 2xl:hidden fixed top-6 right-6"
                 >
                     <FaBarsStaggered className="w-8 h-8 text-primary" />
                 </label>
