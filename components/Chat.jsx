@@ -7,16 +7,6 @@ import { toast } from "react-hot-toast";
 const Chat = () => {
     const [text, setText] = useState("");
     const [messages, setMessages] = useState([]);
-    const formatText = (text) => {
-        const formattedText = text
-            .replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>")
-            .replace(/(^|\n)\* (.*?)(?=\n|$)/g, "<li>$2</li>");
-
-        // Wrap any <li> items with <ul> tags
-        return formattedText.includes("<li>")
-            ? `<ul>${formattedText}</ul>`
-            : formattedText;
-    };
     const { mutate, isPending } = useMutation({
         mutationFn: (query) => generateChatResponse(messages, query),
         onSuccess: (data) => {
@@ -35,23 +25,30 @@ const Chat = () => {
         setMessages((prev) => [...prev, query]);
         setText("");
     };
+
     return (
         <div className="min-h-[calc(100vh-6rem)] grid grid-rows-[1fr,auto]">
-            <div>
+            <div className="mb-10">
                 {messages.map(({ role, parts }, index) => {
-                    const avatar = role === "user" ? "👤" : "🤖";
-                    const bcg = role === "user" ? "bg-base-200" : "bg-base-100";
+                    const isUser = role === "user";
+                    const avatar = isUser ? "👤" : "🤖";
+                    const alignment = isUser ? "justify-end" : "justify-start";
+                    const messageAlignment = isUser
+                        ? "bg-base-100"
+                        : "bg-base-100";
+                    const avatarAlignment = isUser
+                        ? "order-last ml-4 mt-2"
+                        : "mr-4";
+
                     return (
-                        <div
-                            key={index}
-                            className={` ${bcg} flex py-6 -mx-8 px-8
-                text-xl leading-loose border-b border-base-300`}
-                        >
-                            <span className="mr-4">{avatar}</span>
-                            <p
-                                className="max-w-6xl"
+                        <div key={index} className={`flex ${alignment} py-3`}>
+                            <span className={`text-2xl ${avatarAlignment}`}>
+                                {avatar}
+                            </span>
+                            <div
+                                className={`max-w-3xl p-4 rounded-xl ${messageAlignment} shadow-md`}
                                 dangerouslySetInnerHTML={{
-                                    __html: formatText(parts[0].text),
+                                    __html: parts[0].text,
                                 }}
                             />
                         </div>
