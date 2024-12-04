@@ -3,8 +3,8 @@ import React, { useState } from "react";
 import { BsMoonFill, BsSunFill } from "react-icons/bs";
 
 const themes = {
-    light: "garden",
-    dark: "night",
+    light: "aqua",
+    dark: "dark",
 };
 
 const ThemeToggle = () => {

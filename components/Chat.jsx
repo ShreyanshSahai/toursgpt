@@ -1,7 +1,7 @@
 "use client";
 import { generateChatResponse } from "@/utils/actions";
 import { useMutation } from "@tanstack/react-query";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { toast } from "react-hot-toast";
 
 const Chat = () => {
@@ -18,6 +18,52 @@ const Chat = () => {
             setMessages((prev) => [...prev, query]);
         },
     });
+
+    useEffect(() => {
+        const buttons = document.querySelectorAll(".copy-button");
+
+        buttons.forEach((button) => {
+            const handleClick = () => {
+                const codeBlock = button.previousSibling;
+
+                if (codeBlock) {
+                    navigator.clipboard
+                        .writeText(codeBlock.textContent)
+                        .then(() => {
+                            // Find the SVG inside the button
+                            const svg = button.querySelector("svg");
+                            if (svg) {
+                                const path = svg.querySelector("path");
+
+                                if (path) {
+                                    // Change to tick icon (check)
+                                    path.setAttribute("d", "M5 13l4 4L19 7");
+
+                                    // Revert back to the copy icon after 2 seconds
+                                    setTimeout(() => {
+                                        path.setAttribute(
+                                            "d",
+                                            "M8.25 15H6a2.25 2.25 0 01-2.25-2.25v-9A2.25 2.25 0 016 1.5h9A2.25 2.25 0 0117.25 3.75v2.25M15.75 8.25H18a2.25 2.25 0 012.25 2.25v9A2.25 2.25 0 0118 21.75h-9a2.25 2.25 0 01-2.25-2.25v-2.25m2.25 0a.75.75 0 01.75-.75h6a.75.75 0 01.75.75v3a.75.75 0 01-.75.75h-6a.75.75 0 01-.75-.75v-3z"
+                                        );
+                                    }, 1500);
+                                }
+                            }
+                        })
+                        .catch((err) => {
+                            console.error("Failed to copy text:", err);
+                        });
+                }
+            };
+
+            button.addEventListener("click", handleClick);
+
+            // Cleanup
+            return () => {
+                button.removeEventListener("click", handleClick);
+            };
+        });
+    }, [messages]);
+
     const handleSubmit = (e) => {
         e.preventDefault();
         const query = { role: "user", parts: [{ text: text }] };
@@ -37,8 +83,8 @@ const Chat = () => {
                         ? "bg-base-100"
                         : "bg-base-100";
                     const avatarAlignment = isUser
-                        ? "order-last ml-4 mt-2"
-                        : "mr-4";
+                        ? "order-last ml-4 mt-1"
+                        : "mr-4 mt-1";
 
                     return (
                         <div key={index} className={`flex ${alignment} py-3`}>
@@ -46,7 +92,7 @@ const Chat = () => {
                                 {avatar}
                             </span>
                             <div
-                                className={`max-w-3xl p-4 rounded-xl ${messageAlignment} shadow-md`}
+                                className={`max-w-5xl overflow-auto p-4 rounded-xl ${messageAlignment} shadow-md markdown-content`}
                                 dangerouslySetInnerHTML={{
                                     __html: parts[0].text,
                                 }}
@@ -58,7 +104,7 @@ const Chat = () => {
             </div>
             <form
                 onSubmit={handleSubmit}
-                className="max-w-4xl pt-12 fixed bottom-10 left-1/2 -translate-x-1/2 w-full"
+                className="max-w-2xl pt-12 fixed bottom-10 left-1/2 -translate-x-1/2 w-full"
             >
                 <div className="join w-full">
                     <input
@@ -74,7 +120,7 @@ const Chat = () => {
                         type="submit"
                         disabled={isPending}
                     >
-                        {isPending ? "Replying..." : "Ask Question"}
+                        {isPending ? "Replying..." : "Ask"}
                     </button>
                 </div>
             </form>

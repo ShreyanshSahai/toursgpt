@@ -29,13 +29,19 @@ const NewTour = () => {
         mutate(destination);
     };
     if (isPending) {
-        return <span className="loading loading-ball loading-lg"></span>;
+        return (
+            <div className="flex justify-items-center justify-center align-middle">
+                <span className="loading loading-ball"></span>
+                <span className="loading loading-ball loading-lg"></span>
+                <span className="loading loading-ball"></span>
+            </div>
+        );
     }
     return (
         <>
-            <form onSubmit={handleSubmit} className="max-w-2xl">
+            <form onSubmit={handleSubmit} className="max-w-full">
                 <h2 className="mb-9">Choose your dream destination...</h2>
-                <div className="join w-full">
+                <div className="join w-full max-w-3xl">
                     <input
                         type="text"
                         placeholder="City..."
@@ -55,7 +61,7 @@ const NewTour = () => {
                         Let's go
                     </button>
                 </div>
-                <div className="mt-16">
+                <div className="mt-8">
                     {tour ? <TourInfo tour={tour} /> : null}
                 </div>
             </form>

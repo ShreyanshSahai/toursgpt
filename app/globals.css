@@ -1,3 +1,95 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+@import "https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css";
+* {
+    font-family: "Lucida Sans", "Lucida Sans Regular", "Lucida Grande",
+        "Lucida Sans Unicode", Geneva, Verdana, sans-serif;
+}
+/* General markdown styling */
+.markdown-content h1 {
+    font-size: 2rem;
+    font-weight: bold;
+}
+
+.markdown-content h2 {
+    font-size: 1.75rem;
+    margin-top: 1.5rem;
+}
+
+.markdown-content p {
+    margin-bottom: 1rem;
+    line-height: 1.6;
+}
+
+.markdown-content pre {
+    position: relative;
+    background-color: hsl(var(--b2) / var(--tw-bg-opacity));
+    padding: 2.5rem 1rem 0.5rem 1rem;
+    margin: 1rem 0rem;
+    border-radius: 0.9rem;
+    overflow-x: auto;
+}
+
+.markdown-content code {
+    font-family: "Fira Code", monospace;
+    padding: 0.25rem 0.5rem;
+    border-radius: 0.25rem;
+}
+
+/* .copy-button:hover {
+    background-color: hsl(var(--b3) / var(--tw-bg-opacity));
+}
+
+.copy-button {
+    background: hsl(var(--b1) / var(--tw-bg-opacity));
+    border: none;
+    cursor: pointer;
+    position: absolute;
+    border-radius: 0.8rem;
+    top: 10px;
+    right: 10px;
+    padding: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.copy-button .icon {
+    width: 16px;
+    height: 16px;
+    color: white;
+}
+
+.copy-button:hover .icon {
+    color: white;
+} */
+
+.language-label {
+    position: absolute;
+    top: 12px;
+    left: 10px;
+    background-color: hsl(var(--b1) / var(--tw-bg-opacity));
+    color: #fff;
+    padding: 2px 6px;
+    font-size: 12px;
+    border-radius: 4px;
+    text-transform: capitalize;
+}
+
+/* Style for the copy button */
+.copy-button {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    z-index: 10;
+}
+
+.copy-button .icon {
+    width: 20px;
+    height: 20px;
+    color: #fff;
+}

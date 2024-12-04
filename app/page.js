@@ -15,7 +15,7 @@ const HomePage = () => {
                         Plan your next adventure effortlessly with City
                         Explorer!
                     </p>
-                    <Link href="/chat" className="btn btn-secondary">
+                    <Link href="/chat" className="btn btn-primary">
                         {" "}
                         Get Started{" "}
                     </Link>

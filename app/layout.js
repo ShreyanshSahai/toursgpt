@@ -1,8 +1,8 @@
 import localFont from "next/font/local";
 import "./globals.css";
 import { ClerkProvider } from "@clerk/nextjs";
-import { ToastContainer } from "react-toastify";
 import Providers from "./providers";
+import hljs from "highlight.js";
 
 const geistSans = localFont({
     src: "./fonts/GeistVF.woff",
@@ -23,7 +23,8 @@ export const metadata = {
 export default function RootLayout({ children }) {
     return (
         <ClerkProvider>
-            <html lang="en" data-theme="garden">
+            <html lang="en" data-theme="aqua">
+                <head></head>
                 <body
                     className={`${geistSans.variable} ${geistMono.variable} antialiased`}
                 >

@@ -11,10 +11,13 @@ module.exports = {
                 background: "var(--background)",
                 foreground: "var(--foreground)",
             },
+            fontFamily: {
+                display: "Oswald, ui-serif", // Adds a new `font-display` class
+            },
         },
     },
     daisyui: {
-        themes: ["garden", "night"],
+        themes: ["aqua", "dark"],
     },
     plugins: [require("@tailwindcss/typography"), require("daisyui")],
 };
