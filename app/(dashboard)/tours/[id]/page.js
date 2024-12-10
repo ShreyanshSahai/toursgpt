@@ -13,15 +13,15 @@ const SignleTourPage = async ({ params }) => {
     if (!tour) {
         redirect("/tours");
     }
-    const { data } = await axios(`${url}${tour.city},${tour.country}`);
-    const tourImage = data?.results[0]?.urls?.raw;
+    // const { data } = await axios(`${url}${tour.city},${tour.country}`);
+    // const tourImage = data?.results[0]?.urls?.raw;
 
     return (
         <div>
             <Link className="bg-base-200" href="/tours">
                 <IoArrowBackCircleSharp className="w-10 h-10 text-primary" />
             </Link>
-            {tourImage ? (
+            {/* {tourImage ? (
                 <Image
                     src={tourImage}
                     className="rounded-xl shadow-xl mb-6 mt-8 h-96 w-96 object-cover"
@@ -30,7 +30,7 @@ const SignleTourPage = async ({ params }) => {
                     width={300}
                     priority
                 />
-            ) : null}
+            ) : null} */}
             <TourInfo tour={tour}></TourInfo>
         </div>
     );
