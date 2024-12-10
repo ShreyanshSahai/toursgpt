@@ -103,11 +103,6 @@ export const generateChatResponse = async (chatMessages, prompt) => {
     } catch (e) {
         console.error("Error", e);
         if (e.message.includes("Candidate was blocked due to SAFETY") || true) {
-            console.log(
-                "Messages",
-                chatMessages.filter((x) => x.parts.length > 0)
-            );
-
             try {
                 const genAI = new GoogleGenerativeAI(
                     process.env.GEMINI_API_KEY
@@ -173,7 +168,6 @@ If you can't find info on exact ${city}, or ${city} does not exist, or it's popu
                     .replace(/```json|```/g, "")
                     .trim()
             );
-            console.log(tourData.tour);
 
             if (!tourData.tour) {
                 return null;
@@ -211,7 +205,6 @@ If you can't find info on exact ${city}, or ${city} does not exist, or it's popu
                     .replace(/```json|```/g, "")
                     .trim()
             );
-            console.log(tourData.tour);
 
             if (!tourData.tour) {
                 return null;
@@ -224,27 +217,76 @@ If you can't find info on exact ${city}, or ${city} does not exist, or it's popu
     }
 };
 
-export const getExistingTour = ({ city, country }) => {
-    return prisma.tour.findUnique({
+export const getExistingTour = async ({ city, country }) => {
+    const tourData = await prisma.tour.findUnique({
         where: {
             city_country: {
-                city,
-                country,
+                city: city.trim(),
+                country: country.trim(),
             },
         },
     });
+    return tourData && tourData.jsonData
+        ? JSON.parse(tourData?.jsonData)
+        : null;
 };
 
 export const createNewTour = (tour) => {
     try {
-        prisma.tour.create({
+        return prisma.tour.create({
             data: {
-                city: tour.city,
-                country: tour.country,
-                jsonData: tour.jsonData,
+                city: tour.city.trim(),
+                country: tour.country.trim(),
+                jsonData: JSON.stringify(tour),
             },
         });
     } catch (e) {
         console.log(e);
+        return null;
     }
+};
+
+export const getAllTours = async (searchTerm) => {
+    if (!searchTerm) {
+        const tours = await prisma.tour.findMany({
+            orderBy: {
+                city: "asc",
+            },
+        });
+        return tours;
+    }
+    const tours = await prisma.tour.findMany({
+        where: {
+            OR: [
+                {
+                    city: {
+                        contains: searchTerm,
+                        mode: "insensitive",
+                    },
+                },
+                {
+                    country: {
+                        contains: searchTerm,
+                        mode: "insensitive",
+                    },
+                },
+            ],
+        },
+        orderBy: {
+            city: "asc",
+        },
+    });
+
+    return tours;
+};
+
+export const getSingleTour = async (id) => {
+    const singletourData = await prisma.tour.findUnique({
+        where: {
+            id,
+        },
+    });
+    return singletourData && singletourData.jsonData
+        ? JSON.parse(singletourData?.jsonData)
+        : null;
 };

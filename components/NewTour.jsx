@@ -1,23 +1,36 @@
 "use client";
 
-import { generateTourResponse } from "@/utils/actions";
+import {
+    generateTourResponse,
+    getExistingTour,
+    createNewTour,
+} from "@/utils/actions";
 import TourInfo from "./TourInfo";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import toast from "react-hot-toast";
 
 const NewTour = () => {
+    const queryClient = useQueryClient();
     const {
         mutate,
         isPending,
         data: tour,
     } = useMutation({
         mutationFn: async function (destination) {
-            const newTour = await generateTourResponse(destination);
-            if (newTour) {
+            try {
+                const existingTour = await getExistingTour(destination);
+                if (existingTour) return existingTour;
+                const newTour = await generateTourResponse(destination);
+                if (!newTour) {
+                    toast.error("City Not Found In The Country...");
+                    return null;
+                }
+                const response = await createNewTour(newTour);
+                queryClient.invalidateQueries({ queryKey: ["tours"] });
                 return newTour;
+            } catch (e) {
+                console.log(e);
             }
-            toast.error("City not found in that country. Please try again..");
-            return null;
         },
     });
 
@@ -25,7 +38,6 @@ const NewTour = () => {
         e.preventDefault();
         const formData = new FormData(e.currentTarget);
         const destination = Object.fromEntries(formData.entries());
-        console.log(destination);
         mutate(destination);
     };
     if (isPending) {
