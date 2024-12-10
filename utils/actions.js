@@ -75,16 +75,10 @@ export const generateChatResponse = async (chatMessages, prompt) => {
     try {
         const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
         const model = genAI.getGenerativeModel({
-            model: "gemini-1.5-flash-002",
+            model: "gemini-1.5-flash",
         });
-        model.safetySettings(
-            (category =
-                generative_models.HarmCategory.HARM_CATEGORY_DANGEROUS_CONTENT),
-            (threshold = generative_models.HarmBlockThreshold.NO)
-        );
         const chat = model.startChat({
-            history: chatMessages,
-            temperature: 0,
+            history: chatMessages.filter((x) => x.parts.length > 0),
         });
         let result = await chat.sendMessage(prompt);
 
@@ -112,7 +106,6 @@ export const generateChatResponse = async (chatMessages, prompt) => {
                 });
                 const chat = model.startChat({
                     history: chatMessages.filter((x) => x.parts.length > 0),
-                    temperature: 0,
                 });
                 let result = await chat.sendMessage(prompt);
 
