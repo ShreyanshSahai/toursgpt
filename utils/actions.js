@@ -72,64 +72,27 @@ const addCopyButtonAndLanguageLabel = () => {
 };
 
 export const generateChatResponse = async (chatMessages, prompt) => {
-    try {
-        const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
-        const model = genAI.getGenerativeModel({
-            model: "gemini-3-flash-preview",
-        });
-        const chat = model.startChat({
-            history: chatMessages.filter((x) => x.parts.length > 0),
-        });
-        let result = await chat.sendMessage(prompt);
+    const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
+    const model = genAI.getGenerativeModel({
+        model: "gemini-3-flash-preview",
+    });
+    const chat = model.startChat({
+        history: chatMessages.filter((x) => x.parts.length > 0),
+    });
+    let result = await chat.sendMessage(prompt);
 
-        const markdownText = result.response.text();
-        const htmlcontent = await unified()
-            .use(remarkParse)
-            .use(remarkRehype, { allowDangerousHtml: true })
-            .use(rehypeRaw)
-            .use(rehypeFormat)
-            .use(rehypePrism)
-            .use(addCopyButtonAndLanguageLabel)
-            .use(rehypeStringify)
-            .process(markdownText)
-            .then((output) => String(output));
-        return htmlcontent;
-    } catch (e) {
-        console.error("Error", e);
-        if (e.message.includes("Candidate was blocked due to SAFETY") || true) {
-            try {
-                const genAI = new GoogleGenerativeAI(
-                    process.env.GEMINI_API_KEY
-                );
-                const model = genAI.getGenerativeModel({
-                    model: "gemini-1.5-pro",
-                });
-                const chat = model.startChat({
-                    history: chatMessages.filter((x) => x.parts.length > 0),
-                });
-                let result = await chat.sendMessage(prompt);
-
-                const markdownText = result.response.text();
-
-                const htmlcontent = await unified()
-                    .use(remarkParse)
-                    .use(remarkRehype, { allowDangerousHtml: true })
-                    .use(rehypeRaw)
-                    .use(rehypeFormat)
-                    .use(rehypePrism)
-                    .use(addCopyButtonAndLanguageLabel)
-                    .use(rehypeStringify)
-                    .process(markdownText)
-                    .then((output) => String(output));
-
-                return htmlcontent;
-            } catch (e) {
-                console.log(e);
-                return null;
-            }
-        }
-        return null;
-    }
+    const markdownText = result.response.text();
+    const htmlcontent = await unified()
+        .use(remarkParse)
+        .use(remarkRehype, { allowDangerousHtml: true })
+        .use(rehypeRaw)
+        .use(rehypeFormat)
+        .use(rehypePrism)
+        .use(addCopyButtonAndLanguageLabel)
+        .use(rehypeStringify)
+        .process(markdownText)
+        .then((output) => String(output));
+    return htmlcontent;
 };
 
 export const generateTourResponse = async ({ city, country, days }) => {
