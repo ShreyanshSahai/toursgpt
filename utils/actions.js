@@ -10,6 +10,7 @@ import rehypeStringify from "rehype-stringify";
 import { visit } from "unist-util-visit";
 import prisma from "./db";
 
+const main_model = "gemini-2.5-flash-lite";
 const addCopyButtonAndLanguageLabel = () => {
     return (tree) => {
         visit(tree, "element", (node) => {
@@ -74,7 +75,7 @@ const addCopyButtonAndLanguageLabel = () => {
 export const generateChatResponse = async (chatMessages, prompt) => {
     const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
     const model = genAI.getGenerativeModel({
-        model: "gemini-3.1-flash-lite-preview",
+        model: main_model,
     });
     const chat = model.startChat({
         history: chatMessages.filter((x) => x.parts.length > 0),
@@ -113,7 +114,7 @@ Once you have a list, create a ${days}-day tour. Include the activities that can
 If you can't find info on exact ${city}, or ${city} does not exist, or it's population is less than 1, or it is not located in the following ${country} return { "tour": null }, with no additional characters.`;
             const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
             const model = genAI.getGenerativeModel({
-                model: "gemini-3.1-flash-lite-preview",
+                model: main_model,
                 temperature: 0,
             });
             const result = await model.generateContent(query);
@@ -150,7 +151,7 @@ Once you have a list, create a ${days}-day tour. Include the activities that can
 If you can't find info on exact ${city}, or ${city} does not exist, or it's population is less than 1, or it is not located in the following ${country} return { "tour": null }, with no additional characters.`;
             const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
             const model = genAI.getGenerativeModel({
-                model: "gemini-1.5-pro",
+                model: main_model,
                 temperature: 0,
             });
             const result = await model.generateContent(query);
